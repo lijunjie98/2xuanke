@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+	 <mapper namespace="com.jun.dao.XueshengDao">
+	 <resultMap type="kebiao" id="kb">
+	 	<id property="id" column="id"/>
+			<result property="shijian" column="shijian"/>
+			<result property="jieci" column="jieci"/>
+			<result property="jiaoshi" column="jiaoshi"/>
+		<association property="laoshi" javaType="com.jun.bean.laoshi">
+			<id property="id" column="id"/>
+			<result property="xingming" column="xingming"/>
+		</association>
+		<association property="kecheng" javaType="com.jun.bean.kecheng">
+			<id property="id" column="id"/>
+			<result property="bianhao" column="bianhao"/>
+			<result property="mingcheng" column="mingcheng"/>
+			<result property="keshi" column="keshi"/>
+		</association>
+	</resultMap> 
+	 <select id="xueshengLogin" resultType="com.jun.bean.xuesheng">
+		select * from t_xuesheng where loginName=#{loginName} and loginPw=#{loginPw}
+	</select>
+	<select id="xueshengselxinxi" resultType="com.jun.bean.xuesheng">
+		select * from t_xuesheng where loginName=#{loginName}
+	</select>
+	<select id="selx" resultMap="kb">
+		SELECT 
+		 b.id,b.shijian,b.jieci,b.jiaoshi,c.id,c.xingming,
+		 a.id,a.bianhao,a.mingcheng,a.keshi,d.xuesheng_id,d.kebiao_id
+		 FROM t_kecheng a,t_kebiao b,t_laoshi c,t_xuesheng_kebiao d  WHERE a.id=b.kecheng_id AND c.id=b.laoshi_id and d.xuesheng_id=#{id}
+	</select>
+	<select id="sel" resultMap="kb">
+		SELECT 
+		 b.id,b.shijian,b.jieci,b.jiaoshi,c.id,c.xingming,
+		 a.id,a.bianhao,a.mingcheng,a.keshi
+		 FROM t_kecheng a,t_kebiao b,t_laoshi c  WHERE a.id=b.kecheng_id AND c.id=b.laoshi_id
+	</select>
+	<insert id="insertxuanke" parameterType="com.jun.bean.xuesheng_kebiao">
+		insert into t_xuesheng_kebiao(xuesheng_id,kebiao_id)values(#{xuesheng_id},#{kebiao_id})
+	</insert>
+ </mapper>

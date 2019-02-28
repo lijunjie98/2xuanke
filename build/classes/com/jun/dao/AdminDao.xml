@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+ <mapper namespace="com.jun.dao.AdminDao">
+ <resultMap type="kebiao" id="kb">
+	 		<id property="id" column="id"/>
+			<result property="shijian" column="shijian"/>
+			<result property="jieci" column="jieci"/>
+			<result property="jiaoshi" column="jiaoshi"/>
+		<association property="laoshi" javaType="com.jun.bean.laoshi">
+			<id property="id" column="id"/>
+			<result property="xingming" column="xingming"/>
+		</association>
+		<association property="kecheng" javaType="com.jun.bean.kecheng">
+			<id property="id" column="id"/>
+			<result property="bianhao" column="bianhao"/>
+			<result property="mingcheng" column="mingcheng"/>
+			<result property="keshi" column="keshi"/>
+		</association>
+	</resultMap> 
+<select id="userLogin" resultType="com.jun.bean.admin">
+	select * from t_admin where userName=#{userName} and userPw=#{userPw}
+</select>
+<update id="adminPw">
+	update t_admin set userPw=#{userPw} where userName=#{userName} 
+</update>
+<select id="seladmin" resultType="com.jun.bean.admin">
+	select * from t_admin
+</select>
+<insert id="adminAdd" parameterType="com.jun.bean.admin">
+	insert into t_admin(userName,userPw)values(#{userName},#{userPw})
+</insert>
+<delete id="adminDel">
+	delete from t_admin where userId=#{userId}
+</delete>
+<select id="selkecheng" resultType="com.jun.bean.kecheng">
+	select * from t_kecheng
+</select>
+<delete id="kechengDel">
+			delete  from t_kecheng where id=#{id}
+</delete>
+<insert id="kechengAdd" parameterType="com.jun.bean.kecheng">
+	insert into t_kecheng(bianhao,mingcheng,keshi)values(#{bianhao},#{mingcheng},#{keshi})
+</insert>
+<select id="sellaoshi" resultType="com.jun.bean.laoshi">
+	select * from t_laoshi
+</select>
+<delete id="laoshiDel">
+			delete  from t_laoshi  where id=#{id}
+</delete>
+<insert id="laoshiAdd" parameterType="com.jun.bean.laoshi">
+	insert into t_laoshi(bianhao,xingming,xingbie,nianling,zhicheng,loginname,loginpw)
+	values(#{bianhao},#{xingming},#{xingbie},#{nianling},#{zhicheng},#{loginname},#{loginpw})
+</insert>
+
+
+<select id="selkebiao" resultMap="kb">
+		SELECT
+		 b.id,b.shijian,b.jieci,b.jiaoshi,c.id,c.xingming,
+		 a.id,a.bianhao,a.mingcheng,a.keshi
+		 FROM t_kecheng a,t_kebiao b,t_laoshi c WHERE a.id=b.kecheng_id AND c.id=b.laoshi_id
+	</select>
+<delete id="kebiaoDel">
+			delete  from t_kebiao where id=#{id}
+</delete>
+<insert id="kebiaoAdd" parameterType="com.jun.bean.kebiao">
+	insert into t_kebiao(kecheng_id,shijian,jieci,jiaoshi,laoshi_id)values(#{kecheng_id},#{shijian},#{jieci},#{jiaoshi},#{laoshi_id})
+</insert>
+
+<select id="selxuesheng" resultType="com.jun.bean.xuesheng">
+	select * from t_xuesheng
+</select>
+<delete id="xueshengDel">
+			delete  from t_xuesheng where id=#{id}
+</delete>
+<insert id="xueshengAdd" parameterType="com.jun.bean.xuesheng">
+	insert into t_xuesheng(xuehao,xingming,xingbie,nianling,banji,loginname,loginpw)values(#{xuehao},#{xingming},#{xingbie},#{nianling},#{banji},#{loginname},#{loginpw})
+</insert>
+ </mapper>
